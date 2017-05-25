@@ -801,7 +801,6 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 </class>
 </classes>
 <parts>
-<part name="J1" library="SparkFun-Connectors" deviceset="M02" device="PTH"/>
 <part name="J2" library="SparkFun-Connectors" deviceset="M02" device="PTH"/>
 </parts>
 <sheets>
@@ -809,7 +808,6 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <plain>
 </plain>
 <instances>
-<instance part="J1" gate="G$1" x="20.32" y="96.52"/>
 <instance part="J2" gate="G$1" x="48.26" y="96.52" rot="MR0"/>
 </instances>
 <busses>
@@ -817,14 +815,12 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <nets>
 <net name="N$1" class="0">
 <segment>
-<pinref part="J1" gate="G$1" pin="2"/>
 <pinref part="J2" gate="G$1" pin="2"/>
 <wire x1="27.94" y1="99.06" x2="40.64" y2="99.06" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
-<pinref part="J1" gate="G$1" pin="1"/>
 <pinref part="J2" gate="G$1" pin="1"/>
 <wire x1="27.94" y1="96.52" x2="40.64" y2="96.52" width="0.1524" layer="91"/>
 </segment>
