@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>LED Lighting UPS monitor</title>
+    <link rel="stylesheet" href="w3.css">
+        <style>
+            .flashHighlight {
+                -webkit-animation-name: flashAnim; /* Chrome, Safari, Opera */
+                -webkit-animation-duration: 1s; /* Chrome, Safari, Opera */
+                animation-name: flashAnim;
+                animation-duration: 1s;
+            }
+            /* Chrome, Safari, Opera */
+            @-webkit-keyframes flashAnim {
+                0%  {background-color: white;}
+                50%  {background-color: yellow;}
+                100% {background-color: white;}
+            }
+            /* Standard syntax */
+            @keyframes flashAnim {
+                0%  {background-color: white;}
+                50%  {background-color: yellow;}
+                100% {background-color: white;}
+            }
+        </style>
+    <script type="text/javascript">
+        var allDevicesSelectorValue = 'various devices';
+        var curTab = '';
+
+        function selectTab(tabEle) {
+            tabId = tabEle.id;
+            curTab = tabId;
+            var tabLinks = document.getElementsByName("tabLink");
+            for (i = 0; i < tabLinks.length; ++i) {
+                tabLink = tabLinks[i];
+                tabDiv = document.getElementById(tabLink.id + 'Div');
+                if (tabLink.id == tabId) {
+                    tabLink.className = "w3-khaki";
+                    tabDiv.style.display = "block";
+                } else {
+                    tabLink.className = "w3-dark-grey";
+                    tabDiv.style.display = "none";
+                }
+            }
+            return false;
+        }
+        function selectTabById(tabId) {
+            var tabEle = document.getElementById(tabId);
+            return selectTab(tabEle);
+        }
+
+    // from sitepoint.com "How to Capture CSS3 Animation Events in JavaScript" by Craig Buckler
+    var pfx = ["webkit", "moz", "MS", "o", ""];
+    function PrefixedEvent(element, type, callback) {
+    for (var p = 0; p < pfx.length; p++) {
+		if (!pfx[p]) type = type.toLowerCase();
+		element.addEventListener(pfx[p]+type, callback, false);
+	}
+    }
+    function animEnd (e) {
+       e.target.className = '';
+    }
+
+    </script>
+
+    </head>
+<body onload="selectTabById('tab1')">
+
+    <div class="w3-topnav w3-dark-grey w3-large" style="padding:0px 8px 2px 8px">
+        <a href="#" id="tab1" name="tabLink" onclick="return selectTab(this);">Home</a>
+        <a href="#" id="tab2" name="tabLink" onclick="return selectTab(this);">Units</a>
+        <a href="#" id="tab3" name="tabLink" onclick="return selectTab(this);">About</a>
+    </div>
+
+    <div class="w3-container w3-margin-top w3-margin-bottom">
+        <div id="tab1Div" class="w3-container" style="display:none">
+            <H2>Settings:</H2>
+            <table class="w3-table w3-striped w3-bordered w3-card-4 w3-large">
+                <tr>
+                    <th>ID</th>
+                    <th>Mode</th>
+                    <th>Dark</th>
+                    <th>Auto</th>
+                    <th>Manual</th>
+                    <th>Temp Cal Offset</th>
+                </tr>
+                <tr>
+                    <td><div id="ID"></div></td>
+                    <td><div id="Mode"></div></td>
+                    <td><div id="Dark"></div></td>
+                    <td><div id="Auto"></div></td>
+                    <td><div id="Manual"></div></td>
+                    <td><div id="Tcal"></div></td>
+                </tr>
+            </table>
+            <H2>Current Status:</H2>
+            <table class="w3-table w3-striped w3-bordered w3-card-4 w3-large">
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Battery Voltage</td>
+                    <td><div id="BV"></div></td>
+                </tr>
+                <tr>
+                    <td>Mains A/C</td>
+                    <td><div id="AC"></div></td>
+                </tr>
+                <tr>
+                    <td>Mode</td>
+                    <td><div id="C"></div></td>
+                </tr>
+                <tr>
+                    <td>Light Level</td>
+                    <td><div id="Light"></div></td>
+                </tr>
+                <tr>
+                    <td>Motion</td>
+                    <td><div id="Motion"></div></td>
+                </tr>
+                <tr>
+                    <td>Temperature</td>
+                    <td><div id="Temp"></div></td>
+                </tr>
+            </table>
+        </div>
+        <div id="tab2Div" class="w3-container" style="display:none">
+            <h4 style="display:inline-block">Known Units</h4>
+            <p id="deviceEvents">Known Units Loading...</p>
+            <button type="button" onclick="getHistory()">Refresh</button>
+        </div>
+        <div id="tab3Div" class="w3-container" style="display:none">
+            <h4>About</h4>
+            <table class="w3-table w3-striped w3-bordered w3-card-4">
+                <tr>
+                    <td>Server connection status:</td>
+                    <td>
+                        <div id="connectionStatus">x.x</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Node.JS Version:</td>
+                    <td>
+                        <div id="nodeID">x.x</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <footer class="w3-container w3-dark-grey w3-margin-top">
+        <div style="display:inline-block; float:right">Copyright &copy; 2017 Tony Zurolo</div>
+    </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script>
+      var xmlhttp = null;
+      var socket = null;
+
+      function formatDateTime (dtString) {
+        if (dtString.length > 0) {
+            dt = new Date(dtString);
+            formattedDt =
+                dt.toLocaleTimeString() + '<br>' +
+                (dt.getMonth() + 1) + '/' +
+                dt.getDate() + '/' +
+                dt.getFullYear();
+         } else {
+            formattedDt = '-';
+         }
+         
+         return formattedDt;
+      }
+      
+      function sendCommand (cmd)
+      {
+      socket.emit('command', cmd);
+      }
+
+      console.log('starting...');
+
+      var connectionStatusNode = document.getElementById('connectionStatus');
+      var deviceStatusNode = document.getElementById('deviceStatus');
+
+      socket = io();
+
+      socket.on('connect', function(){
+         connectionStatusNode.innerHTML = 'connected';
+      });
+      socket.on('disconnect', function(){
+         connectionStatusNode.innerHTML = 'disconnected';
+         console.log('user disconnected');
+      });
+      
+      socket.on('controllerMessage', function(msg){
+        console.log('controller message: ' + msg);
+        var msgObj = JSON.parse(msg);
+            switch (msgObj.type) {
+                case 'event' :
+                    var eventData = msgObj.data;
+
+                    // update the device state display
+                    nameWidget = document.getElementById(eventData.name);
+                    nameWidget.innerHTML = eventData.value;
+
+                    break;
+            }
+	});
+
+    console.log('done.');
+</script>
+
+</body>
+</html>
