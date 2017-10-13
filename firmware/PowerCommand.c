@@ -82,12 +82,13 @@ void PowerCommand_task (void)
                 PhotocellMonitor_clearStatistics();
                 SystemTime_startTimer(PHOTOCELL_RESPONSE_DELAY, &photocellTimer);
                 cmdState = cs_waitingForPhotocellAfterMainsOff;
-            } else if (((!MainsMonitor_mainsOn()) || 
+            } else if (SystemTime_timerHasExpired(&onOffTimer) && // lockout time expired - must check
+                                                                  // first so timer updates properly
+                       ((!MainsMonitor_mainsOn()) || 
                         (SystemMode_currentMode() == m_primary)) && // mains off or in primary mode
-                       (PhotocellMonitor_haveValidSample()) &&
+                       PhotocellMonitor_haveValidSample() &&
                        (PhotocellMonitor_averageLightLevel() <= EEPROMStorage_darkLevel)  && // it's dark
-                       MotionMonitor_motionDetected() && // motion in room
-                       SystemTime_timerHasExpired(&onOffTimer)) { // lockout time expired
+                       MotionMonitor_motionDetected()) { // motion in room                       
                 turnOnAutomatic();
             }
             break;

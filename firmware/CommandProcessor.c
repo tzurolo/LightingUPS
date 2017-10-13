@@ -20,6 +20,8 @@
 
 #define CMD_TOKEN_BUFFER_LEN 20
 
+char swver[] PROGMEM = "V2.0";
+
 static const char tokenDelimiters[] = " \n\r";
 
 void CommandProcessor_processCommand (
@@ -54,23 +56,22 @@ void CommandProcessor_processCommand (
             }
         } else if (strcasecmp_P(cmdToken, PSTR("settings")) == 0) {
             CharString_define(16, settingStr);
-            CharString_copyP(PSTR("{"), &settingStr);
-            Console_printLineCS(&settingStr);
-            CharString_copyP(PSTR(" ID: "), &settingStr);
+            Console_printP(PSTR("{"));
+            CharString_copyP(PSTR("\"ID\":"), &settingStr);
             StringUtils_appendDecimal(EEPROMStorage_deviceID, 0, &settingStr);
-            Console_printLineCS(&settingStr);
-            CharString_copyP(PSTR(" Mode: "), &settingStr);
+            Console_printCS(&settingStr);
+            CharString_copyP(PSTR(",\"Mode\":\""), &settingStr);
             CharString_appendC((char)EEPROMStorage_mode, &settingStr);
-            Console_printLineCS(&settingStr);
-            CharString_copyP(PSTR(" Dark: "), &settingStr);
+            Console_printCS(&settingStr);
+            CharString_copyP(PSTR("\",\"Dark\":"), &settingStr);
             StringUtils_appendDecimal(EEPROMStorage_darkLevel, 0, &settingStr);
-            Console_printLineCS(&settingStr);
-            CharString_copyP(PSTR(" Auto: "), &settingStr);
+            Console_printCS(&settingStr);
+            CharString_copyP(PSTR(",\"Auto\":"), &settingStr);
             StringUtils_appendDecimal(EEPROMStorage_autoTime, 0, &settingStr);
-            Console_printLineCS(&settingStr);
-            CharString_copyP(PSTR(" Manual: "), &settingStr);
+            Console_printCS(&settingStr);
+            CharString_copyP(PSTR(",\"Manual\":"), &settingStr);
             StringUtils_appendDecimal(EEPROMStorage_manualTime, 0, &settingStr);
-            Console_printLineCS(&settingStr);
+            Console_printCS(&settingStr);
             CharString_copyP(PSTR("}"), &settingStr);
             Console_printLineCS(&settingStr);
         } else if (strcasecmp_P(cmdToken, PSTR("set")) == 0) {
@@ -122,6 +123,28 @@ void CommandProcessor_processCommand (
                     } else {
                         goodCommand = false;
                     }
+                } else if (strcasecmp_P(cmdToken, PSTR("tCalOffset")) == 0) {
+                    cmdToken = strtok(NULL, tokenDelimiters);
+                    if (cmdToken != NULL) {
+                        const int16_t tempCalOffset = atoi(cmdToken);
+                        EEPROMStorage_setTempCalOffset(tempCalOffset);
+                    } else {
+                        goodCommand = false;
+                    }
+                } else {
+                    goodCommand = false;
+                }
+            } else {
+                goodCommand = false;
+            }
+        } else if (strcasecmp_P(cmdToken, PSTR("get")) == 0) {
+            cmdToken = strtok(NULL, tokenDelimiters);
+            if (cmdToken != NULL) {
+                if (strcasecmp_P(cmdToken, PSTR("tCalOffset")) == 0) {
+                    CharString_define(16, offsetStr);
+                    CharString_copyP(PSTR("tCalOffset: "), &offsetStr);
+                    StringUtils_appendDecimal(EEPROMStorage_tempCalOffset, 0, &offsetStr);
+                    Console_printLineCS(&offsetStr);
                 } else {
                     goodCommand = false;
                 }
@@ -141,6 +164,8 @@ void CommandProcessor_processCommand (
             } else {
                 goodCommand = false;
             }
+        } else if (strcasecmp_P(cmdToken, PSTR("ver")) == 0) {
+            Console_printLineP(swver);
         } else if (strcasecmp_P(cmdToken, PSTR("eeread")) == 0) {
             cmdToken = strtok(NULL, tokenDelimiters);
             if (cmdToken != NULL) {

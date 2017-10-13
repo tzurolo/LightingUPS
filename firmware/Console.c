@@ -21,7 +21,7 @@
 // commands
 #define cmdOK       '?'
 
-#define commandBufferSize 20
+#define commandBufferSize 24
 
 // state variables
 static char commandBuffer[commandBufferSize+1];
@@ -100,6 +100,12 @@ void Console_printLine (
 {
     Console_print(text);
     Console_printNewline();
+}
+
+void Console_printCS (
+    const CharString_t* text)
+{
+    Console_print(CharString_cstr(text));
 }
 
 void Console_printLineCS (

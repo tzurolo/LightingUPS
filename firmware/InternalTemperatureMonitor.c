@@ -9,6 +9,7 @@
 #include "ADCManager.h"
 #include "SystemTime.h"
 #include "DataHistory.h"
+#include "EEPROMStorage.h"
 
 #define SENSOR_ADC_CHANNEL 8
 
@@ -16,8 +17,6 @@
 
 // at 20 deg C we got 349 counts from the AtTiny84
 #define ESTIMATED_ZERO_C_COUNTS 286
-
-#define T_OFFSET (-266)
 
 #define SENSOR_POWERUP_DELAY SYSTEMTIME_TICKS_PER_SECOND / 5
 #define SENSOR_SAMPLE_TIME SYSTEMTIME_TICKS_PER_SECOND / 10
@@ -51,6 +50,8 @@ bool InternalTemperatureMonitor_haveValidSample (void)
 
 int16_t InternalTemperatureMonitor_currentTemperature (void)
 {
+    int16_t curTempC = 0;
+
     uint16_t avgTemperature = 0;
     if (DataHistory_length(&temperatureHistory) >= SENSOR_SAMPLES) {
         uint16_t minTemmp;
@@ -58,10 +59,12 @@ int16_t InternalTemperatureMonitor_currentTemperature (void)
         DataHistory_getStatistics(
             &temperatureHistory, SENSOR_SAMPLES,
             &minTemmp, &maxTemp, &avgTemperature);
+
+        // counts to degrees C
+        curTempC = avgTemperature + EEPROMStorage_tempCalOffset;
     }
 
-    // counts to degrees C
-    return avgTemperature + T_OFFSET;
+    return curTempC;
 }
 
 void InternalTemperatureMonitor_task (void)

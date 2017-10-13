@@ -24,20 +24,23 @@ extern void Console_setEcho (
     const bool newEcho);
 
 extern void Console_print (
-	const char* text);
+    const char* text);
 
 extern void Console_printLine (
-	const char* text);
+    const char* text);
+
+extern void Console_printCS (
+    const CharString_t* text);
 
 extern void Console_printLineCS (
-	const CharString_t* text);
+    const CharString_t* text);
 
 extern void Console_printNewline (void);
 
 extern void Console_printP (
-	PGM_P text);
+    PGM_P text);
 
 extern void Console_printLineP (
-	PGM_P text);
+    PGM_P text);
 
 #endif  // Console_H
