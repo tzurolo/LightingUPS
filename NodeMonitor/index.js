@@ -58,11 +58,10 @@ function processMicrocontrollerMessage (
     message)
 {
     // console.log("microcontroller: '" + message + '"');
-    var tokens = message.trim().split(/\s+/);
-    switch (tokens[0]) {
-        case 'UI' :
-        case 'UB' :
+    switch (message[0]) {
+        case 'U' :
             console.log('got status string');
+            var tokens = message.trim().split(/\s+/);
             var eventJSON =
                 '{ "type": "event", "data": ' + '{' +
                    '"name": "BV", ' +
@@ -101,23 +100,37 @@ function processMicrocontrollerMessage (
             io.emit('controllerMessage', eventJSON);
             sendCommandToMicrocontroller('status');
             break;
-        case 'ID:' :
+        case 'V' :
+            console.log('sw version');
+            var eventJSON =
+                '{ "type": "event", "data": ' + '{' +
+                   '"name": "swver", ' +
+                   '"value": "' + message + '"}' +
+                '}';
+            io.emit('controllerMessage', eventJSON);
+            sendCommandToMicrocontroller('settings');
+            break;
+        case '{' :
+            console.log('got settings');
+            var settings = JSON.parse(message);
             var eventJSON =
                 '{ "type": "event", "data": ' + '{' +
                    '"name": "ID", ' +
-                   '"value": "' + tokens[1] + '"}' +
+                   '"value": "' + settings.ID + '"}' +
                 '}';
             io.emit('controllerMessage', eventJSON);
-            break;
-        case 'Manual:' :
-            var eventJSON =
+            eventJSON =
                 '{ "type": "event", "data": ' + '{' +
                    '"name": "Manual", ' +
-                   '"value": "' + tokens[1] + '"}' +
+                   '"value": "' + settings.Manual + '"}' +
                 '}';
             io.emit('controllerMessage', eventJSON);
+            console.log('end of status');
+            sendCommandToMicrocontroller('get tcaloffset');
+            //io.emit('controllerMessage', eventJSON);
             break;
-        case 'offset:' :
+        case 't' :
+            var tokens = message.trim().split(/\s+/);
             console.log('temp cal offset ' + tokens[1]);
             var eventJSON =
                 '{ "type": "event", "data": ' + '{' +
@@ -126,11 +139,6 @@ function processMicrocontrollerMessage (
                 '}';
             io.emit('controllerMessage', eventJSON);
             sendCommandToMicrocontroller('status');
-            break;
-        case '}' :
-            console.log('end of status');
-            sendCommandToMicrocontroller('get tcaloffset');
-            //io.emit('controllerMessage', eventJSON);
             break;
         case 'unrecognized' :
             // command not recognized by microcontroller.
@@ -185,7 +193,7 @@ serialPort.on("open", function () {
     console.log('serial port closed');
   });
 
-  sendCommandToMicrocontroller('settings');
+  sendCommandToMicrocontroller('ver');
 });
 
 
