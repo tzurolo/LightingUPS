@@ -127,6 +127,8 @@
                     <td><div id="Temp"></div></td>
                 </tr>
             </table>
+            <div style="display:inline-block">Last updated:</div>
+            <div id="parameterDataTimestamp" style="display:inline-block">-</div>
         </div>
         <div id="tab2Div" class="w3-container" style="display:none">
             <h4 style="display:inline-block">Known Units</h4>
@@ -207,6 +209,14 @@
                     // update the device state display
                     nameWidget = document.getElementById(eventData.name);
                     nameWidget.innerHTML = eventData.value;
+                    
+                    // update the timestamp
+                    var now = new Date();
+                    timestampWidget = document.getElementById('parameterDataTimestamp');
+                    timestampWidget.innerHTML = now.toLocaleTimeString() + ' ' +
+                        (now.getMonth() + 1) + '/' +
+                         now.getDate() + '/' +
+                         now.getFullYear();
 
                     break;
             }
