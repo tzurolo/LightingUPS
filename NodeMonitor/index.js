@@ -35,7 +35,16 @@ function requestUnitInfo ()
 function serialPortTimedOut ()
 {
     console.log('Serial port timeout');
+    serialPortRxLine = '';
     requestUnitInfo();
+    if (currentSettings !== null) {
+        currentSWVer = null;
+        currentSettings = null;
+        currentTCalOffset = null;
+        sendSWVersionToClient(currentSWVer);
+        sendSettingsToClient(currentSettings);
+        sendTCalOffsetToClient(currentTCalOffset);
+    }
 }
 
  function sendCommandToMicrocontroller (cmd) {
@@ -70,6 +79,78 @@ function convertTempToF (
 {
     var degF = ((parseFloat(degC) * 9.0) / 5.0) + 32.0;
     return degF.toFixed(1) + '&#x2109';
+}
+
+function sendSettingsToClient (
+    settings)
+{
+    if (settings == null) {
+        settings = {
+            "ID": "-",
+            "Mode": "-",
+            "Dark": "-",
+            "Auto": "-",
+            "Manual": "-"
+        };
+    }
+    var eventJSON =
+        '{ "type": "event", "data": ' + '{' +
+            '"name": "ID", ' +
+            '"value": "' + settings.ID + '"}' +
+        '}';
+    io.emit('controllerMessage', eventJSON);
+    eventJSON =
+        '{ "type": "event", "data": ' + '{' +
+            '"name": "Mode", ' +
+            '"value": "' + settings.Mode + '"}' +
+        '}';
+    io.emit('controllerMessage', eventJSON);
+    eventJSON =
+        '{ "type": "event", "data": ' + '{' +
+            '"name": "Dark", ' +
+            '"value": "' + settings.Dark + '"}' +
+        '}';
+    io.emit('controllerMessage', eventJSON);
+    eventJSON =
+        '{ "type": "event", "data": ' + '{' +
+            '"name": "Auto", ' +
+            '"value": "' + settings.Auto + '"}' +
+        '}';
+    io.emit('controllerMessage', eventJSON);
+    eventJSON =
+        '{ "type": "event", "data": ' + '{' +
+            '"name": "Manual", ' +
+            '"value": "' + settings.Manual + '"}' +
+        '}';
+    io.emit('controllerMessage', eventJSON);
+}
+
+function sendSWVersionToClient (
+    swver)
+{
+    if (swver == null) {
+        swver = '-';
+    }
+    var eventJSON =
+        '{ "type": "event", "data": ' + '{' +
+            '"name": "swver", ' +
+            '"value": "' + swver + '"}' +
+        '}';
+    io.emit('controllerMessage', eventJSON);
+}
+
+function sendTCalOffsetToClient (
+    tcaloffset)
+{
+    if (tcaloffset == null) {
+        tcaloffset = '-'
+    }
+    var eventJSON =
+        '{ "type": "event", "data": ' + '{' +
+            '"name": "Tcal", ' +
+            '"value": "' + tcaloffset + '"}' +
+        '}';
+    io.emit('controllerMessage', eventJSON);
 }
 
 function processMicrocontrollerMessage (
@@ -122,59 +203,23 @@ function processMicrocontrollerMessage (
             case 'V' :
                 currentSWVer = message;
                 console.log('sw version: ' + currentSWVer);
-                var eventJSON =
-                    '{ "type": "event", "data": ' + '{' +
-                       '"name": "swver", ' +
-                       '"value": "' + currentSWVer + '"}' +
-                    '}';
-                io.emit('controllerMessage', eventJSON);
+                sendSWVersionToClient(currentSWVer);
                 break;
             case '{' :
                 console.log('got settings');
-                var currentSettings = JSON.parse(message);
-                var eventJSON =
-                    '{ "type": "event", "data": ' + '{' +
-                       '"name": "ID", ' +
-                       '"value": "' + currentSettings.ID + '"}' +
-                    '}';
-                io.emit('controllerMessage', eventJSON);
-                var eventJSON =
-                    '{ "type": "event", "data": ' + '{' +
-                       '"name": "Mode", ' +
-                       '"value": "' + currentSettings.Mode + '"}' +
-                    '}';
-                io.emit('controllerMessage', eventJSON);
-                var eventJSON =
-                    '{ "type": "event", "data": ' + '{' +
-                       '"name": "Dark", ' +
-                       '"value": "' + currentSettings.Dark + '"}' +
-                    '}';
-                io.emit('controllerMessage', eventJSON);
-                var eventJSON =
-                    '{ "type": "event", "data": ' + '{' +
-                       '"name": "Auto", ' +
-                       '"value": "' + currentSettings.Auto + '"}' +
-                    '}';
-                io.emit('controllerMessage', eventJSON);
-                eventJSON =
-                    '{ "type": "event", "data": ' + '{' +
-                       '"name": "Manual", ' +
-                       '"value": "' + currentSettings.Manual + '"}' +
-                    '}';
-                io.emit('controllerMessage', eventJSON);
-                console.log('end of status');
-                //io.emit('controllerMessage', eventJSON);
+                if (message[message.length-1] == '}') {
+                    currentSettings = JSON.parse(message);
+                    sendSettingsToClient(currentSettings);
+                    console.log('end of status');
+                } else {
+                    gotExpectedResponse = false;
+                }
                 break;
             case 't' :
                 var tokens = message.trim().split(/\s+/);
                 currentTCalOffset = tokens[1];
                 console.log('temp cal offset ' + currentTCalOffset);
-                var eventJSON =
-                    '{ "type": "event", "data": ' + '{' +
-                       '"name": "Tcal", ' +
-                       '"value": "' + currentTCalOffset + '"}' +
-                    '}';
-                io.emit('controllerMessage', eventJSON);
+                sendTCalOffsetToClient(currentTCalOffset);
                 break;
             default :
                 gotExpectedResponse = false;
@@ -196,9 +241,15 @@ function processMicrocontrollerMessage (
 
 io.on('connection', function(socket){
     console.log('got a connection.');
-  socket.on('command', function(msg){
+    socket.on('serverCommand', function(msg){
+        sendSWVersionToClient(currentSWVer);
+        sendSettingsToClient(currentSettings);
+        sendTCalOffsetToClient(currentTCalOffset);
+        console.log('got server command from client: ' + msg);
+  });
+    socket.on('unitCommand', function(msg){
       cmdQueue.push(msg);
-      console.log('got command from client: ' + msg);
+      console.log('got unit command from client: ' + msg);
   });
   socket.on('disconnect', function () {
     console.log('lost connection.');

@@ -88,12 +88,12 @@
                     <th>Temp Cal Offset</th>
                 </tr>
                 <tr>
-                    <td><div id="ID"></div></td>
-                    <td><div id="Mode"></div></td>
-                    <td><div id="Dark"></div></td>
-                    <td><div id="Auto"></div></td>
-                    <td><div id="Manual"></div></td>
-                    <td><div id="Tcal"></div></td>
+                    <td><div id="ID">-</div></td>
+                    <td><div id="Mode">-</div></td>
+                    <td><div id="Dark">-</div></td>
+                    <td><div id="Auto">-</div></td>
+                    <td><div id="Manual">-</div></td>
+                    <td><div id="Tcal">-</div></td>
                 </tr>
             </table>
             <H2>Current Status:</H2>
@@ -181,7 +181,7 @@
       
       function sendCommand (cmd)
       {
-      socket.emit('command', cmd);
+      socket.emit('unitCommand', cmd);
       }
 
       console.log('starting...');
@@ -193,6 +193,7 @@
 
       socket.on('connect', function(){
          connectionStatusNode.innerHTML = 'connected';
+         socket.emit('serverCommand','refresh');
       });
       socket.on('disconnect', function(){
          connectionStatusNode.innerHTML = 'disconnected';
