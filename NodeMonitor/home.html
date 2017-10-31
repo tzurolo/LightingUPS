@@ -133,7 +133,7 @@
         <div id="tab2Div" class="w3-container" style="display:none">
             <h4 style="display:inline-block">Known Units</h4>
             <p id="deviceEvents">Known Units Loading...</p>
-            <button type="button" onclick="getHistory()">Refresh</button>
+            <button type="button" onclick="requestReflash()">Reflash</button>
         </div>
         <div id="tab3Div" class="w3-container" style="display:none">
             <h4>About</h4>
@@ -177,6 +177,11 @@
          }
          
          return formattedDt;
+      }
+      
+      function requestReflash ()
+      {
+         socket.emit('serverCommand','reflash');
       }
       
       function sendCommand (cmd)

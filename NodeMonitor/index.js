@@ -2,6 +2,10 @@ var fs = require('fs');
 var express = require('express');
 var app = express();
 
+var childProcess = require('child_process');
+var exec = childProcess.exec;
+var execFile = childProcess.execFile;
+
 var http = require('http');
 var socketIo = require('socket.io');
 
@@ -242,11 +246,51 @@ function processMicrocontrollerMessage (
 io.on('connection', function(socket){
     console.log('got a connection.');
     socket.on('serverCommand', function(msg){
-        sendSWVersionToClient(currentSWVer);
-        sendSettingsToClient(currentSettings);
-        sendTCalOffsetToClient(currentTCalOffset);
         console.log('got server command from client: ' + msg);
+        switch (msg) {
+            case 'refresh' :
+                sendSWVersionToClient(currentSWVer);
+                sendSettingsToClient(currentSettings);
+                sendTCalOffsetToClient(currentTCalOffset);
+                break;
+            case 'reflash' :
+                //  child process for re-flashing firmware with avrdude
+                var child = execFile('avrdude', [
+                    '-p', 'attiny84',
+                    '-P', 'COM4',
+                    '-c', 'avrispv2',
+                    '-e',
+                    '-U',
+                    'flash:w:C:\\files\\LightingUPS\\firmware\\default\\LightingUPS.hex:i' ]);
+                child.stdin.setEncoding('utf-8');
+
+                child.stdout.on('data', function (data) {
+                    console.log('child stdout: "' + data + '"');
+                });
+
+                child.stderr.on('data', function (data) {
+                    var logmsg = '';
+                    for (i = 0; i < data.length; ++i) {
+                        var c = data.charCodeAt(i);
+                        if ((c < 32) || (c > 126)) {
+                            logmsg += ('(' + c + ')');
+                        } else {
+                            logmsg += data[i];
+                        }
+                    }
+                    console.log('child stderr: "' + logmsg + '"');
+                });
+
+                child.on('close', function () {
+                    console.log('child exited');
+                });
+
+                break;
+            default :
+                console.log('unrecognized server command');
+        }
   });
+
     socket.on('unitCommand', function(msg){
       cmdQueue.push(msg);
       console.log('got unit command from client: ' + msg);
@@ -284,7 +328,6 @@ serialPort.on("open", function () {
 
   requestUnitInfo();
 });
-
 
 var port = 5401;
 httpServer.listen(port, function(){
