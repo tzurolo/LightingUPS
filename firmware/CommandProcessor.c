@@ -24,6 +24,12 @@ char swver[] PROGMEM = "V2.0";
 
 static const char tokenDelimiters[] = " \n\r";
 
+typedef enum Reply_enum {
+    r_none,
+    r_ok,
+    r_error
+} Reply;
+
 void CommandProcessor_processCommand (
     const char* command)
 {
@@ -32,27 +38,27 @@ void CommandProcessor_processCommand (
     sprintf(msgbuf, "cmd: '%s'", command);
     Console_print(msgbuf);
 #endif
-
+    Reply reply = r_none;
     char cmdTokenBuf[CMD_TOKEN_BUFFER_LEN];
     strncpy(cmdTokenBuf, command, CMD_TOKEN_BUFFER_LEN-1);
     cmdTokenBuf[CMD_TOKEN_BUFFER_LEN-1] = 0;
     const char* cmdToken = strtok(cmdTokenBuf, tokenDelimiters);
     if (cmdToken != NULL) {
-        bool goodCommand = true;
 	if (strcasecmp_P(cmdToken, PSTR("status")) == 0) {
             StatusIndicators_sendStatusMesssage();
         } else if (strcasecmp_P(cmdToken, PSTR("leds")) == 0) {
             cmdToken = strtok(NULL, tokenDelimiters);
             if (cmdToken != NULL) {
+                reply = r_ok;
                 if (strcasecmp_P(cmdToken, PSTR("on")) == 0) {
                     PowerCommand_turnOn();
                 } else if (strcasecmp_P(cmdToken, PSTR("off")) == 0) {
                     PowerCommand_turnOff(AUTO_ON_LOCKOUT_TIME);
                 } else {
-                    goodCommand = false;
+                    reply = r_error;
                 }
             } else {
-                goodCommand = false;
+                reply = r_error;
             }
         } else if (strcasecmp_P(cmdToken, PSTR("settings")) == 0) {
             CharString_define(16, settingStr);
@@ -77,13 +83,14 @@ void CommandProcessor_processCommand (
         } else if (strcasecmp_P(cmdToken, PSTR("set")) == 0) {
             cmdToken = strtok(NULL, tokenDelimiters);
             if (cmdToken != NULL) {
+                reply = r_ok;
                 if (strcasecmp_P(cmdToken, PSTR("id")) == 0) {
                     cmdToken = strtok(NULL, tokenDelimiters);
                     if (cmdToken != NULL) {
                         const unsigned int deviceID = atoi(cmdToken);
                         EEPROMStorage_setDeviceId((uint8_t)deviceID);
                     } else {
-                        goodCommand = false;
+                        reply = r_error;
                     }
                 } else if (strcasecmp_P(cmdToken, PSTR("mode")) == 0) {
                     cmdToken = strtok(NULL, tokenDelimiters);
@@ -94,10 +101,10 @@ void CommandProcessor_processCommand (
                             (mode == 'S')) {
                             EEPROMStorage_setMode((uint8_t)mode);
                         } else {
-                            goodCommand = false;
+                            reply = r_error;
                         }
                     } else {
-                        goodCommand = false;
+                        reply = r_error;
                     }
                 } else if (strcasecmp_P(cmdToken, PSTR("dark")) == 0) {
                     cmdToken = strtok(NULL, tokenDelimiters);
@@ -105,7 +112,7 @@ void CommandProcessor_processCommand (
                         const unsigned int darkLevel = atoi(cmdToken);
                         EEPROMStorage_setDarkLevel((uint8_t)darkLevel);
                     } else {
-                        goodCommand = false;
+                        reply = r_error;
                     }
                 } else if (strcasecmp_P(cmdToken, PSTR("auto")) == 0) {
                     cmdToken = strtok(NULL, tokenDelimiters);
@@ -113,7 +120,7 @@ void CommandProcessor_processCommand (
                         const unsigned int autoTimeOn = atoi(cmdToken);
                         EEPROMStorage_setAutoTime((uint16_t)autoTimeOn);
                     } else {
-                        goodCommand = false;
+                        reply = r_error;
                     }
                 } else if (strcasecmp_P(cmdToken, PSTR("manual")) == 0) {
                     cmdToken = strtok(NULL, tokenDelimiters);
@@ -121,7 +128,7 @@ void CommandProcessor_processCommand (
                         const unsigned int manualTimeOn = atoi(cmdToken);
                         EEPROMStorage_setManualTime((uint16_t)manualTimeOn);
                     } else {
-                        goodCommand = false;
+                        reply = r_error;
                     }
                 } else if (strcasecmp_P(cmdToken, PSTR("tCalOffset")) == 0) {
                     cmdToken = strtok(NULL, tokenDelimiters);
@@ -129,13 +136,13 @@ void CommandProcessor_processCommand (
                         const int16_t tempCalOffset = atoi(cmdToken);
                         EEPROMStorage_setTempCalOffset(tempCalOffset);
                     } else {
-                        goodCommand = false;
+                        reply = r_error;
                     }
                 } else {
-                    goodCommand = false;
+                    reply = r_error;
                 }
             } else {
-                goodCommand = false;
+                reply = r_error;
             }
         } else if (strcasecmp_P(cmdToken, PSTR("get")) == 0) {
             cmdToken = strtok(NULL, tokenDelimiters);
@@ -146,55 +153,41 @@ void CommandProcessor_processCommand (
                     StringUtils_appendDecimal(EEPROMStorage_tempCalOffset, 0, &offsetStr);
                     Console_printLineCS(&offsetStr);
                 } else {
-                    goodCommand = false;
+                    reply = r_error;
                 }
             } else {
-                goodCommand = false;
+                reply = r_error;
             }
         } else if (strcasecmp_P(cmdToken, PSTR("echo")) == 0) {
             cmdToken = strtok(NULL, tokenDelimiters);
             if (cmdToken != NULL) {
+                reply = r_ok;
                 if (strcasecmp_P(cmdToken, PSTR("on")) == 0) {
                     Console_setEcho(true);
                 } else if (strcasecmp_P(cmdToken, PSTR("off")) == 0) {
                     Console_setEcho(false);
                 } else {
-                    goodCommand = false;
+                    reply = r_error;
                 }
             } else {
-                goodCommand = false;
+                reply = r_error;
             }
         } else if (strcasecmp_P(cmdToken, PSTR("ver")) == 0) {
             Console_printLineP(swver);
-        } else if (strcasecmp_P(cmdToken, PSTR("eeread")) == 0) {
-            cmdToken = strtok(NULL, tokenDelimiters);
-            if (cmdToken != NULL) {
-                const unsigned int uiAddress = atoi(cmdToken);
-                const uint8_t eeromData = EEPROM_read(uiAddress);
-                CharString_define(10, msg);
-                StringUtils_appendDecimal(uiAddress, 0, &msg);
-                CharString_appendP(PSTR(" : "), &msg);
-                StringUtils_appendDecimal(eeromData, 0, &msg);
-                Console_printLineCS(&msg);
-            }
-        } else if (strcasecmp_P(cmdToken, PSTR("eewrite")) == 0) {
-            cmdToken = strtok(NULL, tokenDelimiters);
-            if (cmdToken != NULL) {
-                const unsigned int uiAddress = atoi(cmdToken);
-                cmdToken = strtok(NULL, tokenDelimiters);
-                if (cmdToken != NULL) {
-                    const uint8_t value = atoi(cmdToken);
-                    EEPROM_write(uiAddress, value);
-                }
-            }
-        } else if (strcasecmp_P(cmdToken, PSTR("reboot")) == 0) {
-            SystemTime_commenceShutdown();
         } else {
-            goodCommand = false;
+            reply = r_error;
         }
-        if (!goodCommand) {
-            Console_printLineP(PSTR("unrecognized command"));
-        }
+    } else {
+        reply = r_ok;
     }
-
+    switch (reply) {
+        case r_none :
+            break;
+        case r_ok :
+            Console_printLineP(PSTR("OK"));
+            break;
+        case r_error :
+            Console_printLineP(PSTR("ERROR"));
+            break;
+    }
 }

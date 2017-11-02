@@ -38,18 +38,10 @@ void Console_task (void)
         const char cmdByte = (char)ByteQueue_pop(rxQueue);
         switch (cmdByte) {
             case '\r' : {
-            Console_printNewline();
                 // command complete. execute it
                 CommandProcessor_processCommand(commandBuffer);
 
                 commandBuffer[0] = 0;
-                }
-                break;
-            case 0x12 : {
-                if (EEPROMStorage_echo) {
-                    Console_printP(PSTR("\r\033[K"));   // carriage return, erase to end of line
-                    Console_print(commandBuffer);       // reprint entire line
-                }
                 }
                 break;
             case 0x7f : {
