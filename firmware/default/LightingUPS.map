@@ -169,7 +169,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x1fbe
+.text           0x00000000     0x1ec8
  *(.vectors)
  .vectors       0x00000000       0x22 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25/crttn84.o
                 0x00000000                __vectors
@@ -179,46 +179,45 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a
  *(.progmem*)
  .progmem.data  0x00000022        0x9 ADCManager.o
                 0x00000022                channelMasks
- .progmem.data  0x0000002b       0xd6 CommandProcessor.o
+ .progmem.data  0x0000002b       0xb0 CommandProcessor.o
                 0x0000002b                swver
- .progmem.data  0x00000101       0x10 Console.o
- .progmem.data  0x00000111       0x17 StatusIndicators.o
- .progmem.data  0x00000128        0x3 CharString.o
-                0x0000012c                . = ALIGN (0x2)
- *fill*         0x0000012b        0x1 00
-                0x0000012c                __trampolines_start = .
+ .progmem.data  0x000000db        0xb Console.o
+ .progmem.data  0x000000e6       0x17 StatusIndicators.o
+ .progmem.data  0x000000fd        0x3 CharString.o
+                0x00000100                . = ALIGN (0x2)
+                0x00000100                __trampolines_start = .
  *(.trampolines)
- .trampolines   0x0000012c        0x0 linker stubs
+ .trampolines   0x00000100        0x0 linker stubs
  *(.trampolines*)
-                0x0000012c                __trampolines_end = .
+                0x00000100                __trampolines_end = .
  *(.jumptables)
  *(.jumptables*)
  *(.lowtext)
  *(.lowtext*)
-                0x0000012c                __ctors_start = .
+                0x00000100                __ctors_start = .
  *(.ctors)
-                0x0000012c                __ctors_end = .
-                0x0000012c                __dtors_start = .
+                0x00000100                __ctors_end = .
+                0x00000100                __dtors_start = .
  *(.dtors)
-                0x0000012c                __dtors_end = .
+                0x00000100                __dtors_end = .
  SORT(*)(.ctors)
  SORT(*)(.dtors)
  *(.init0)
- .init0         0x0000012c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25/crttn84.o
-                0x0000012c                __init
+ .init0         0x00000100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25/crttn84.o
+                0x00000100                __init
  *(.init0)
  *(.init1)
  *(.init1)
  *(.init2)
- .init2         0x0000012c        0xc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25/crttn84.o
+ .init2         0x00000100        0xc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25/crttn84.o
  *(.init2)
  *(.init3)
  *(.init3)
  *(.init4)
- .init4         0x00000138       0x16 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_copy_data.o)
-                0x00000138                __do_copy_data
- .init4         0x0000014e       0x10 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_clear_bss.o)
-                0x0000014e                __do_clear_bss
+ .init4         0x0000010c       0x16 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_copy_data.o)
+                0x0000010c                __do_copy_data
+ .init4         0x00000122       0x10 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_clear_bss.o)
+                0x00000122                __do_clear_bss
  *(.init4)
  *(.init5)
  *(.init5)
@@ -229,217 +228,217 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x0000015e        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25/crttn84.o
+ .init9         0x00000132        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25/crttn84.o
  *(.init9)
  *(.text)
- .text          0x00000162        0x2 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25/crttn84.o
-                0x00000162                __vector_1
-                0x00000162                __vector_12
-                0x00000162                __bad_interrupt
-                0x00000162                __vector_3
-                0x00000162                __vector_11
-                0x00000162                __vector_13
-                0x00000162                __vector_7
-                0x00000162                __vector_5
-                0x00000162                __vector_4
-                0x00000162                __vector_15
-                0x00000162                __vector_8
-                0x00000162                __vector_14
-                0x00000162                __vector_10
-                0x00000162                __vector_16
- .text          0x00000164       0x58 LightingUPS.o
-                0x00000164                main
- .text          0x000001bc      0x16c SystemTime.o
-                0x000002a8                SystemTime_shuttingDown
-                0x000001e8                SystemTime_currentTick
-                0x000001fa                SystemTime_startTimer
-                0x000002ae                SystemTime_task
-                0x0000028e                SystemTime_commenceShutdown
-                0x000002c4                __vector_9
-                0x00000218                SystemTime_cancelTimer
-                0x000002ba                SystemTime_registerForTickNotification
-                0x00000224                SystemTime_timerHasExpired
-                0x000001bc                SystemTime_Initialize
- .text          0x00000328      0x11a ADCManager.o
-                0x00000338                ADCManager_setupChannel
-                0x000003c2                ADCManager_ConversionIsComplete
-                0x00000380                ADCManager_StartConversion
-                0x000003fa                ADCManager_task
-                0x00000328                ADCManager_Initialize
- .text          0x00000442      0x19c DataHistory.o
-                0x00000442                DataHistory_insertValue
-                0x0000048e                DataHistory_getLatest
-                0x000004c6                DataHistory_getStatistics
- .text          0x000005de      0x40e CommandProcessor.o
-                0x000005de                CommandProcessor_processCommand
- .text          0x000009ec       0x56 EEPROMStorage.o
-                0x000009ec                EEPROMStorage_Initialize
- .text          0x00000a42       0x30 SystemMode.o
-                0x00000a48                SystemMode_setModeSetting
-                0x00000a52                SystemMode_modeSetting
-                0x00000a5a                SystemMode_currentMode
-                0x00000a42                SystemMode_Initialize
- .text          0x00000a72       0xfe Console.o
-                0x00000ab6                Console_setEcho
-                0x00000a7c                Console_printNewline
-                0x00000aac                Console_printLine
-                0x00000a84                Console_printLineP
-                0x00000aa2                Console_printCS
-                0x00000a78                Console_printP
-                0x00000ac0                Console_task
-                0x00000a72                Console_Initialize
-                0x00000a92                Console_printLineCS
-                0x00000a8e                Console_print
- .text          0x00000b70      0x184 BatteryMonitor.o
-                0x00000c60                BatteryMonitor_currentVoltage
-                0x00000b76                BatteryMonitor_task
-                0x00000ccc                BatteryMonitor_Initialize
-                0x00000b70                BatteryMonitor_currentStatus
- .text          0x00000cf4      0x13c PhotocellMonitor.o
-                0x00000d6e                PhotocellMonitor_averageLightLevel
-                0x00000de0                PhotocellMonitor_currentLightLevel
-                0x00000d0e                PhotocellMonitor_task
-                0x00000d04                PhotocellMonitor_clearStatistics
-                0x00000e0c                PhotocellMonitor_Initialize
-                0x00000cf4                PhotocellMonitor_haveValidSample
- .text          0x00000e30       0x68 PushbuttonMonitor.o
-                0x00000e36                PushbuttonMonitor_task
-                0x00000e30                PushbuttonMonitor_buttonIsPressed
-                0x00000e7a                PushbuttonMonitor_Initialize
- .text          0x00000e98       0xb6 MainsMonitor.o
-                0x00000e98                MainsMonitor_registerForNotification
-                0x00000ea8                MainsMonitor_task
-                0x00000ea2                MainsMonitor_mainsOn
-                0x00000f1e                MainsMonitor_Initialize
- .text          0x00000f4e       0x4c MotionMonitor.o
-                0x00000f6a                MotionMonitor_task
-                0x00000f84                MotionMonitor_Initialize
-                0x00000f4e                MotionMonitor_motionDetected
- .text          0x00000f9a      0x10e InternalTemperatureMonitor.o
-                0x00000f9a                InternalTemperatureMonitor_haveValidSample
-                0x00000faa                InternalTemperatureMonitor_task
-                0x00001084                InternalTemperatureMonitor_Initialize
-                0x00001020                InternalTemperatureMonitor_currentTemperature
- .text          0x000010a8      0x29c PowerCommand.o
-                0x000010ba                PowerCommand_current
-                0x000010f6                PowerCommand_turnOn
-                0x0000114a                PowerCommand_task
-                0x000010c0                PowerCommand_turnOff
-                0x000010a8                PowerCommand_Initialize
- .text          0x00001344      0x17a PowerSwitches.o
-                0x00001356                PowerSwitches_command
-                0x0000135c                PowerSwitches_currentState
-                0x00001362                PowerSwitches_task
-                0x00001344                PowerSwitches_Initialize
- .text          0x000014be      0x1d0 StatusIndicators.o
-                0x000014be                StatusIndicators_sendStatusMesssage
-                0x000015fa                StatusIndicators_task
-                0x0000166e                StatusIndicators_Initialize
- .text          0x0000168e       0xfa ByteQueue.o
-                0x00001724                ByteQueue_pop
-                0x000016a4                ByteQueue_push
-                0x0000168e                ByteQueue_clear
- .text          0x00001788      0x15a SoftwareSerialTx.o
-                0x000017be                SoftwareSerialTx_sendChar
-                0x00001790                SoftwareSerialTx_disable
-                0x000017d4                SoftwareSerialTx_send
-                0x00001858                SoftwareSerialTx_Initialize
-                0x00001788                SoftwareSerialTx_enable
-                0x00001796                SoftwareSerialTx_isIdle
-                0x000017fe                SoftwareSerialTx_sendP
- .text          0x000018e2      0x166 SoftwareSerialRx.o
-                0x000018e2                SoftwareSerialRx_enable
-                0x00001948                __vector_6
-                0x000018f8                SoftwareSerialRx_disable
-                0x00001910                __vector_2
-                0x0000190a                SoftwareSerial_rxQueue
-                0x00001a04                SoftwareSerialRx_Initialize
- .text          0x00001a48      0x178 CharString.o
-                0x00001a48                CharString_appendC
-                0x00001a76                CharString_truncate
-                0x00001b2c                CharString_appendNewline
-                0x00001b70                CharString_appendCS
-                0x00001a90                CharString_appendP
-                0x00001ad8                CharString_append
- .text          0x00001bc0      0x114 StringUtils.o
-                0x00001c12                StringUtils_appendDecimal
-                0x00001bc0                StringUtils_scanQuotedString
- .text          0x00001cd4       0x66 EEPROM.o
-                0x00001ce4                EEPROM_read
-                0x00001cf2                EEPROM_readWord
-                0x00001d1a                EEPROM_writeWord
-                0x00001cd4                EEPROM_write
- .text          0x00001d3a       0x1e RamSentinel.o
-                0x00001d3a                RAMSentinel_Initialize
-                0x00001d42                RAMSentinel_sentinelIntact
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_mulsi3.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodqi4.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodhi4.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodsi4.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_divmodsi4.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_exit.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_copy_data.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_clear_bss.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(atoi.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strcasecmp_P.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strlen_P.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strncpy_P.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strtok.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strncpy.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strtok_r.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(itoa.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(mul10.o)
- .text          0x00001d58        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strrev.o)
-                0x00001d58                . = ALIGN (0x2)
+ .text          0x00000136        0x2 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25/crttn84.o
+                0x00000136                __vector_1
+                0x00000136                __vector_12
+                0x00000136                __bad_interrupt
+                0x00000136                __vector_3
+                0x00000136                __vector_11
+                0x00000136                __vector_13
+                0x00000136                __vector_7
+                0x00000136                __vector_5
+                0x00000136                __vector_4
+                0x00000136                __vector_15
+                0x00000136                __vector_8
+                0x00000136                __vector_14
+                0x00000136                __vector_10
+                0x00000136                __vector_16
+ .text          0x00000138       0x58 LightingUPS.o
+                0x00000138                main
+ .text          0x00000190      0x16c SystemTime.o
+                0x0000027c                SystemTime_shuttingDown
+                0x000001bc                SystemTime_currentTick
+                0x000001ce                SystemTime_startTimer
+                0x00000282                SystemTime_task
+                0x00000262                SystemTime_commenceShutdown
+                0x00000298                __vector_9
+                0x000001ec                SystemTime_cancelTimer
+                0x0000028e                SystemTime_registerForTickNotification
+                0x000001f8                SystemTime_timerHasExpired
+                0x00000190                SystemTime_Initialize
+ .text          0x000002fc      0x11a ADCManager.o
+                0x0000030c                ADCManager_setupChannel
+                0x00000396                ADCManager_ConversionIsComplete
+                0x00000354                ADCManager_StartConversion
+                0x000003ce                ADCManager_task
+                0x000002fc                ADCManager_Initialize
+ .text          0x00000416      0x19c DataHistory.o
+                0x00000416                DataHistory_insertValue
+                0x00000462                DataHistory_getLatest
+                0x0000049a                DataHistory_getStatistics
+ .text          0x000005b2      0x362 CommandProcessor.o
+                0x000005b2                CommandProcessor_processCommand
+ .text          0x00000914       0x56 EEPROMStorage.o
+                0x00000914                EEPROMStorage_Initialize
+ .text          0x0000096a       0x30 SystemMode.o
+                0x00000970                SystemMode_setModeSetting
+                0x0000097a                SystemMode_modeSetting
+                0x00000982                SystemMode_currentMode
+                0x0000096a                SystemMode_Initialize
+ .text          0x0000099a       0xe0 Console.o
+                0x000009de                Console_setEcho
+                0x000009a4                Console_printNewline
+                0x000009d4                Console_printLine
+                0x000009ac                Console_printLineP
+                0x000009ca                Console_printCS
+                0x000009a0                Console_printP
+                0x000009e8                Console_task
+                0x0000099a                Console_Initialize
+                0x000009ba                Console_printLineCS
+                0x000009b6                Console_print
+ .text          0x00000a7a      0x184 BatteryMonitor.o
+                0x00000b6a                BatteryMonitor_currentVoltage
+                0x00000a80                BatteryMonitor_task
+                0x00000bd6                BatteryMonitor_Initialize
+                0x00000a7a                BatteryMonitor_currentStatus
+ .text          0x00000bfe      0x13c PhotocellMonitor.o
+                0x00000c78                PhotocellMonitor_averageLightLevel
+                0x00000cea                PhotocellMonitor_currentLightLevel
+                0x00000c18                PhotocellMonitor_task
+                0x00000c0e                PhotocellMonitor_clearStatistics
+                0x00000d16                PhotocellMonitor_Initialize
+                0x00000bfe                PhotocellMonitor_haveValidSample
+ .text          0x00000d3a       0x68 PushbuttonMonitor.o
+                0x00000d40                PushbuttonMonitor_task
+                0x00000d3a                PushbuttonMonitor_buttonIsPressed
+                0x00000d84                PushbuttonMonitor_Initialize
+ .text          0x00000da2       0xb6 MainsMonitor.o
+                0x00000da2                MainsMonitor_registerForNotification
+                0x00000db2                MainsMonitor_task
+                0x00000dac                MainsMonitor_mainsOn
+                0x00000e28                MainsMonitor_Initialize
+ .text          0x00000e58       0x4c MotionMonitor.o
+                0x00000e74                MotionMonitor_task
+                0x00000e8e                MotionMonitor_Initialize
+                0x00000e58                MotionMonitor_motionDetected
+ .text          0x00000ea4      0x10e InternalTemperatureMonitor.o
+                0x00000ea4                InternalTemperatureMonitor_haveValidSample
+                0x00000eb4                InternalTemperatureMonitor_task
+                0x00000f8e                InternalTemperatureMonitor_Initialize
+                0x00000f2a                InternalTemperatureMonitor_currentTemperature
+ .text          0x00000fb2      0x29c PowerCommand.o
+                0x00000fc4                PowerCommand_current
+                0x00001000                PowerCommand_turnOn
+                0x00001054                PowerCommand_task
+                0x00000fca                PowerCommand_turnOff
+                0x00000fb2                PowerCommand_Initialize
+ .text          0x0000124e      0x17a PowerSwitches.o
+                0x00001260                PowerSwitches_command
+                0x00001266                PowerSwitches_currentState
+                0x0000126c                PowerSwitches_task
+                0x0000124e                PowerSwitches_Initialize
+ .text          0x000013c8      0x1d0 StatusIndicators.o
+                0x000013c8                StatusIndicators_sendStatusMesssage
+                0x00001504                StatusIndicators_task
+                0x00001578                StatusIndicators_Initialize
+ .text          0x00001598       0xfa ByteQueue.o
+                0x0000162e                ByteQueue_pop
+                0x000015ae                ByteQueue_push
+                0x00001598                ByteQueue_clear
+ .text          0x00001692      0x15a SoftwareSerialTx.o
+                0x000016c8                SoftwareSerialTx_sendChar
+                0x0000169a                SoftwareSerialTx_disable
+                0x000016de                SoftwareSerialTx_send
+                0x00001762                SoftwareSerialTx_Initialize
+                0x00001692                SoftwareSerialTx_enable
+                0x000016a0                SoftwareSerialTx_isIdle
+                0x00001708                SoftwareSerialTx_sendP
+ .text          0x000017ec      0x166 SoftwareSerialRx.o
+                0x000017ec                SoftwareSerialRx_enable
+                0x00001852                __vector_6
+                0x00001802                SoftwareSerialRx_disable
+                0x0000181a                __vector_2
+                0x00001814                SoftwareSerial_rxQueue
+                0x0000190e                SoftwareSerialRx_Initialize
+ .text          0x00001952      0x178 CharString.o
+                0x00001952                CharString_appendC
+                0x00001980                CharString_truncate
+                0x00001a36                CharString_appendNewline
+                0x00001a7a                CharString_appendCS
+                0x0000199a                CharString_appendP
+                0x000019e2                CharString_append
+ .text          0x00001aca      0x114 StringUtils.o
+                0x00001b1c                StringUtils_appendDecimal
+                0x00001aca                StringUtils_scanQuotedString
+ .text          0x00001bde       0x66 EEPROM.o
+                0x00001bee                EEPROM_read
+                0x00001bfc                EEPROM_readWord
+                0x00001c24                EEPROM_writeWord
+                0x00001bde                EEPROM_write
+ .text          0x00001c44       0x1e RamSentinel.o
+                0x00001c44                RAMSentinel_Initialize
+                0x00001c4c                RAMSentinel_sentinelIntact
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_mulsi3.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodqi4.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodhi4.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodsi4.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_divmodsi4.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_exit.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_copy_data.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_clear_bss.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(atoi.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strcasecmp_P.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strlen_P.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strncpy_P.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strtok.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strncpy.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strtok_r.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(itoa.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(mul10.o)
+ .text          0x00001c62        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strrev.o)
+                0x00001c62                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x00001d58       0x32 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_mulsi3.o)
-                0x00001d58                __mulsi3
- .text.libgcc   0x00001d8a       0x18 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodqi4.o)
-                0x00001d8a                __udivmodqi4
- .text.libgcc   0x00001da2       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodhi4.o)
-                0x00001da2                __udivmodhi4
- .text.libgcc   0x00001dca       0x44 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodsi4.o)
-                0x00001dca                __udivmodsi4
- .text.libgcc   0x00001e0e       0x36 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_divmodsi4.o)
-                0x00001e0e                __divmodsi4
- .text.libgcc   0x00001e44        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_exit.o)
- .text.libgcc   0x00001e44        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_copy_data.o)
- .text.libgcc   0x00001e44        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00001c62       0x32 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_mulsi3.o)
+                0x00001c62                __mulsi3
+ .text.libgcc   0x00001c94       0x18 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodqi4.o)
+                0x00001c94                __udivmodqi4
+ .text.libgcc   0x00001cac       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodhi4.o)
+                0x00001cac                __udivmodhi4
+ .text.libgcc   0x00001cd4       0x44 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_udivmodsi4.o)
+                0x00001cd4                __udivmodsi4
+ .text.libgcc   0x00001d18       0x36 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_divmodsi4.o)
+                0x00001d18                __divmodsi4
+ .text.libgcc   0x00001d4e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_exit.o)
+ .text.libgcc   0x00001d4e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_copy_data.o)
+ .text.libgcc   0x00001d4e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_clear_bss.o)
  .text.avr-libc
-                0x00001e44       0x3a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(atoi.o)
-                0x00001e44                atoi
+                0x00001d4e       0x3a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(atoi.o)
+                0x00001d4e                atoi
  .text.avr-libc
-                0x00001e7e       0x26 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strcasecmp_P.o)
-                0x00001e7e                strcasecmp_P
+                0x00001d88       0x26 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strcasecmp_P.o)
+                0x00001d88                strcasecmp_P
  .text.avr-libc
-                0x00001ea4       0x12 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strlen_P.o)
-                0x00001ea4                strlen_P
+                0x00001dae       0x12 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strlen_P.o)
+                0x00001dae                strlen_P
  .text.avr-libc
-                0x00001eb6       0x1e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strncpy_P.o)
-                0x00001eb6                strncpy_P
+                0x00001dc0       0x1e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strncpy_P.o)
+                0x00001dc0                strncpy_P
  .text.avr-libc
-                0x00001ed4        0x8 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strtok.o)
-                0x00001ed4                strtok
+                0x00001dde        0x8 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strtok.o)
+                0x00001dde                strtok
  .text.avr-libc
-                0x00001edc       0x1e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strncpy.o)
-                0x00001edc                strncpy
+                0x00001de6       0x1e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strncpy.o)
+                0x00001de6                strncpy
  .text.avr-libc
-                0x00001efa       0x4e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strtok_r.o)
-                0x00001efa                strtok_r
+                0x00001e04       0x4e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strtok_r.o)
+                0x00001e04                strtok_r
  .text.avr-libc
-                0x00001f48       0x3e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(itoa.o)
-                0x00001f48                itoa
+                0x00001e52       0x3e c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(itoa.o)
+                0x00001e52                itoa
  .text.avr-libc
-                0x00001f86       0x14 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(mul10.o)
-                0x00001f86                __mulhi_const_10
+                0x00001e90       0x14 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(mul10.o)
+                0x00001e90                __mulhi_const_10
  .text.avr-libc
-                0x00001f9a       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strrev.o)
-                0x00001f9a                strrev
-                0x00001fba                . = ALIGN (0x2)
+                0x00001ea4       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25\libc.a(strrev.o)
+                0x00001ea4                strrev
+                0x00001ec4                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00001fba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_exit.o)
-                0x00001fba                exit
-                0x00001fba                _exit
+ .fini9         0x00001ec4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_exit.o)
+                0x00001ec4                exit
+                0x00001ec4                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -458,11 +457,11 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00001fba        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_exit.o)
+ .fini0         0x00001ec4        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a(_exit.o)
  *(.fini0)
-                0x00001fbe                _etext = .
+                0x00001ec8                _etext = .
 
-.data           0x00800060       0x28 load address 0x00001fbe
+.data           0x00800060       0x28 load address 0x00001ec8
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800060        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr25/crttn84.o
@@ -576,8 +575,8 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a
  *(.bss*)
  *(COMMON)
                 0x0080019a                PROVIDE (__bss_end, .)
-                0x00001fbe                __data_load_start = LOADADDR (.data)
-                0x00001fe6                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00001ec8                __data_load_start = LOADADDR (.data)
+                0x00001ef0                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x0080019a        0x0
                 0x0080019a                PROVIDE (__noinit_start, .)
@@ -602,7 +601,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a
 .signature
  *(.signature*)
 
-.stab           0x00000000     0x6da4
+.stab           0x00000000     0x6c0c
  *(.stab)
  .stab          0x00000000      0x720 LightingUPS.o
  .stab          0x00000720      0x5d0 SystemTime.o
@@ -611,50 +610,50 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr25\libgcc.a
                                 0x810 (size before relaxing)
  .stab          0x0000126c      0x4c8 DataHistory.o
                                 0x630 (size before relaxing)
- .stab          0x00001734      0xb40 CommandProcessor.o
-                                0xe64 (size before relaxing)
- .stab          0x00002274      0x1ec EEPROMStorage.o
+ .stab          0x00001734      0x9d8 CommandProcessor.o
+                                0xcfc (size before relaxing)
+ .stab          0x0000210c      0x1ec EEPROMStorage.o
                                 0x3c0 (size before relaxing)
- .stab          0x00002460      0x27c SystemMode.o
+ .stab          0x000022f8      0x27c SystemMode.o
                                 0x4b0 (size before relaxing)
- .stab          0x000026dc      0x588 Console.o
-                                0x8a0 (size before relaxing)
- .stab          0x00002c64      0x480 BatteryMonitor.o
+ .stab          0x00002574      0x558 Console.o
+                                0x870 (size before relaxing)
+ .stab          0x00002acc      0x480 BatteryMonitor.o
                                 0x6e4 (size before relaxing)
- .stab          0x000030e4      0x420 PhotocellMonitor.o
+ .stab          0x00002f4c      0x420 PhotocellMonitor.o
                                 0x684 (size before relaxing)
- .stab          0x00003504      0x288 PushbuttonMonitor.o
+ .stab          0x0000336c      0x288 PushbuttonMonitor.o
                                 0x4c8 (size before relaxing)
- .stab          0x0000378c      0x2e8 MainsMonitor.o
+ .stab          0x000035f4      0x2e8 MainsMonitor.o
                                 0x540 (size before relaxing)
- .stab          0x00003a74      0x240 MotionMonitor.o
+ .stab          0x000038dc      0x240 MotionMonitor.o
                                 0x480 (size before relaxing)
- .stab          0x00003cb4      0x3d8 InternalTemperatureMonitor.o
+ .stab          0x00003b1c      0x3d8 InternalTemperatureMonitor.o
                                 0x63c (size before relaxing)
- .stab          0x0000408c      0x63c PowerCommand.o
+ .stab          0x00003ef4      0x63c PowerCommand.o
                                 0x8b8 (size before relaxing)
- .stab          0x000046c8      0x4e0 PowerSwitches.o
+ .stab          0x00004530      0x4e0 PowerSwitches.o
                                 0x7f8 (size before relaxing)
- .stab          0x00004ba8      0x570 StatusIndicators.o
+ .stab          0x00004a10      0x570 StatusIndicators.o
                                 0x900 (size before relaxing)
- .stab          0x00005118      0x39c ByteQueue.o
+ .stab          0x00004f80      0x39c ByteQueue.o
                                 0x54c (size before relaxing)
- .stab          0x000054b4      0x6b4 SoftwareSerialTx.o
+ .stab          0x0000531c      0x6b4 SoftwareSerialTx.o
                                 0x99c (size before relaxing)
- .stab          0x00005b68      0x4a4 SoftwareSerialRx.o
+ .stab          0x000059d0      0x4a4 SoftwareSerialRx.o
                                 0x6fc (size before relaxing)
- .stab          0x0000600c      0x4c8 CharString.o
+ .stab          0x00005e74      0x4c8 CharString.o
                                 0x750 (size before relaxing)
- .stab          0x000064d4      0x3a8 StringUtils.o
+ .stab          0x0000633c      0x3a8 StringUtils.o
                                 0x6a8 (size before relaxing)
- .stab          0x0000687c      0x384 EEPROM.o
+ .stab          0x000066e4      0x384 EEPROM.o
                                 0x588 (size before relaxing)
- .stab          0x00006c00      0x1a4 RamSentinel.o
+ .stab          0x00006a68      0x1a4 RamSentinel.o
                                 0x354 (size before relaxing)
 
-.stabstr        0x00000000     0x3a0b
+.stabstr        0x00000000     0x39d0
  *(.stabstr)
- .stabstr       0x00000000     0x3a0b LightingUPS.o
+ .stabstr       0x00000000     0x39d0 LightingUPS.o
 
 .stab.excl
  *(.stab.excl)
