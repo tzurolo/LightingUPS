@@ -62,6 +62,16 @@
        e.target.className = '';
     }
 
+    function unitSet(element)
+    {
+        var cmd = 'set ' + element.id + ' ' + element.value;
+        console.log(cmd);
+        socket.emit('unitCommand', cmd);
+        
+        // refresh display of all settings
+        socket.emit('unitCommand', 'settings');
+        socket.emit('unitCommand', 'get tcaloffset');
+    }
     </script>
 
     </head>
@@ -75,25 +85,30 @@
 
     <div class="w3-container w3-margin-top w3-margin-bottom">
         <div id="tab1Div" class="w3-container" style="display:none">
-            <P>Firmware Version</P>
-            <P id="swver">-</P>
+            <div style="display:inline-block">Firmware Version: </div>
+            <div id="swver" style="display:inline-block">-</div>
             <H2>Settings:</H2>
-            <table class="w3-table w3-striped w3-bordered w3-card-4 w3-large">
+            <table class="w3-table w3-striped w3-bordered w3-card-4">
                 <tr>
                     <th>ID</th>
                     <th>Mode</th>
-                    <th>Dark</th>
-                    <th>Auto</th>
-                    <th>Manual</th>
-                    <th>Temp Cal Offset</th>
+                    <th>Dark (%)</th>
+                    <th>Auto (minutes)</th>
+                    <th>Manual (minutes)</th>
+                    <th>Temp Cal Offset (&deg;C)</th>
                 </tr>
                 <tr>
-                    <td><div id="ID">-</div></td>
-                    <td><div id="Mode">-</div></td>
-                    <td><div id="Dark">-</div></td>
-                    <td><div id="Auto">-</div></td>
-                    <td><div id="Manual">-</div></td>
-                    <td><div id="Tcal">-</div></td>
+                    <td style="width:10%"><input id="ID" min="0" max="1000" style="width:100%;height:100%" type="number" onchange="unitSet(this)"></td>
+                    <td style="width:10%"><select id="Mode">
+                        <option value="S">S</option>
+                        <option value="P">P</option>
+                        <option value="B">B</option>
+                        </select>
+                    </td>
+                    <td style="width:10%"><input id="Dark" min="0" max="100" style="width:100%;height:100%" type="number" onchange="unitSet(this)"></td>
+                    <td style="width:10%"><input id="Auto" min="0" max="1000" style="width:100%;height:100%" type="number" onchange="unitSet(this)"></td>
+                    <td style="width:10%"><input id="Manual" min="0" max="1000" style="width:100%;height:100%" type="number" onchange="unitSet(this)"></td>
+                    <td style="width:10%"><input id="Tcaloffset" min="-1000" max="1000" style="width:100%;height:100%" type="number" onchange="unitSet(this)"></td>
                 </tr>
             </table>
             <H2>Current Status:</H2>
@@ -129,11 +144,12 @@
             </table>
             <div style="display:inline-block">Last updated:</div>
             <div id="parameterDataTimestamp" style="display:inline-block">-</div>
+            <br>
+            <button type="button" onclick="requestReflash()">Reprogram Firmware</button>
         </div>
         <div id="tab2Div" class="w3-container" style="display:none">
             <h4 style="display:inline-block">Known Units</h4>
             <p id="deviceEvents">Known Units Loading...</p>
-            <button type="button" onclick="requestReflash()">Reflash</button>
         </div>
         <div id="tab3Div" class="w3-container" style="display:none">
             <h4>About</h4>
@@ -181,7 +197,7 @@
       
       function requestReflash ()
       {
-         socket.emit('serverCommand','reflash');
+         socket.emit('serverCommand','reprogram');
       }
       
       function sendCommand (cmd)
@@ -214,7 +230,12 @@
 
                     // update the device state display
                     nameWidget = document.getElementById(eventData.name);
-                    nameWidget.innerHTML = eventData.value;
+                    if (nameWidget.tagName == 'INPUT') {
+                        nameWidget.value = eventData.value;
+                    } else if (nameWidget.tagName == 'SELECT') {
+                    } else {
+                        nameWidget.innerHTML = eventData.value;
+                    }
                     
                     // update the timestamp
                     var now = new Date();
@@ -226,7 +247,7 @@
 
                     break;
             }
-	});
+    });
 
     console.log('done.');
 </script>
