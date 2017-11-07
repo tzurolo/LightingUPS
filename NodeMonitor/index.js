@@ -3,7 +3,6 @@ var express = require('express');
 var app = express();
 
 var childProcess = require('child_process');
-var exec = childProcess.exec;
 var execFile = childProcess.execFile;
 
 var http = require('http');
@@ -30,7 +29,8 @@ var savedTCalOffset = null;
 
 var Mode = {
     Monitoring : 'Monitoring',
-    Reprogramming : 'Reprogramming'
+    Reprogramming : 'Reprogramming',
+    Exiting : 'Exiting'
 };
 var currentMode = Mode.Monitoring;
 
@@ -52,28 +52,35 @@ function requestUnitInfo ()
 
 function serialPortTimedOut ()
 {
-    if (currentMode == Mode.Monitoring) {
-        console.log('Serial port timeout');
-        serialPortRxLine = '';
-        if ((cmdQueue.length == 0) ||
-            ((cmdQueue.length == 1) && (cmdQueue[0] == 'status'))) {
-            // we were only requesting status. request all info
-            cmdQueue = [];
-            requestUnitInfo();
-        } else if (cmdQueue.length > 0) {
-            // there are commands in the queue - retry sending
-            sendCommandToMicrocontroller(cmdQueue[0]);
-        }
-        if (currentSettings !== null) {
-            // clear out old settings
-            currentSWVer = null;
-            currentSettings = null;
-            currentTCalOffset = null;
-            // blank out UI fields
-            sendSWVersionToClient(currentSWVer);
-            sendSettingsToClient(currentSettings);
-            sendTCalOffsetToClient(currentTCalOffset);
-        }
+    console.log('Serial port timeout');
+    switch (currentMode) {
+        case Mode.Monitoring :
+            serialPortRxLine = '';
+            if ((cmdQueue.length == 0) ||
+                ((cmdQueue.length == 1) && (cmdQueue[0] == 'status'))) {
+                // we were only requesting status. request all info
+                cmdQueue = [];
+                requestUnitInfo();
+            } else if (cmdQueue.length > 0) {
+                // there are commands in the queue - retry sending
+                sendCommandToMicrocontroller(cmdQueue[0]);
+            }
+            if (currentSettings !== null) {
+                // clear out old settings
+                currentSWVer = null;
+                currentSettings = null;
+                currentTCalOffset = null;
+                // blank out UI fields
+                sendSWVersionToClient(currentSWVer);
+                sendSettingsToClient(currentSettings);
+                sendTCalOffsetToClient(currentTCalOffset);
+            }
+            break;
+        case Mode.Exiting :
+            serialPort.close();
+            break;
+        default :
+            break;
     }
 }
 
@@ -231,6 +238,7 @@ function processMicrocontrollerMessage (
                 // response to status query
                 console.log('got status string');
                 var tokens = message.trim().split(/\s+/);
+                sendEventToUI('UPS', tokens[0]);
                 sendEventToUI('BV', tokens[1]);
                 sendEventToUI('AC', tokens[2]);
                 sendEventToUI('C', tokens[3]);
@@ -274,6 +282,10 @@ function processMicrocontrollerMessage (
                         case 'Dark:'   : currentSettings.Dark   = tokens[1]; break;
                         case 'Auto:'   : currentSettings.Auto   = tokens[1]; break;
                         case 'Manual:' : currentSettings.Manual = tokens[1]; break;
+                        case 'offset:' : currentTCalOffset      = tokens[1];
+                                         responseIsComplete = true;
+                                         sendTCalOffsetToClient(currentTCalOffset);
+                                         break;
                         default        : console.log('unexpected setting name: "' + tokens[0] + '"');
                     }
                 }
@@ -318,16 +330,20 @@ function processMicrocontrollerMessage (
         if (cmdQueue.length == 0) {
             // finished all queued commands.
             // determine what to do next
-            if (currentMode == Mode.Monitoring) {
-                // we are in monitoring mode.
-                // request status
-                cmdQueue.push('status');
-            } else if (currentMode == Mode.Reprogramming) {
-                // we are in reprogramming mode.
-                // initiate reprogramming
-                console.log('commence reprogramming...');
-                clearTimeout(serialPortTimeoutTimer);
-                commenceReprogramming();
+            switch (currentMode) {
+                case Mode.Monitoring :
+                    // request status
+                    cmdQueue.push('status');
+                    break;
+                case Mode.Reprogramming :
+                    // initiate reprogramming
+                    console.log('commence reprogramming...');
+                    clearTimeout(serialPortTimeoutTimer);
+                    commenceReprogramming();
+                    break;
+                case Mode.Exiting :
+                    serialPort.close();
+                    break;
             }
         }
         if (cmdQueue.length > 0) {
@@ -401,3 +417,22 @@ httpServer.listen(port, function(){
   console.log('listening on *:' + port);
 });
 
+// launch child process for chrome UI
+var browser = execFile('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe', [
+    '--new-window', 'http://localhost:' + port + '/home'
+    ]);
+browser.stdin.setEncoding('utf-8');
+
+browser.stdout.on('data', function (data) {
+    console.log('browser stdout: "' + data + '"');
+});
+browser.stderr.on('data', function (data) {
+    console.log('browser stderr: "' + data + '"');
+});
+
+browser.on('close', function () {
+    console.log('browser exited');
+    currentMode = Mode.Exiting;
+    io.close();
+    httpServer.close();
+});
