@@ -7,6 +7,6 @@ Being a UPS, it auto-switches to its internal battery when the AC power goes dow
 it comes back up.
 </p>
 
-![alt text](doc/LED_Lighting_UPS.jpg)
+![alt text](doc/LED_Lighting_UPS.jpg?raw=true)
 oh.
 
