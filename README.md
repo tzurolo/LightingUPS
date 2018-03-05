@@ -1,4 +1,4 @@
-#LED Lighting UPS
+# LED Lighting UPS
 
 The LED Lighting UPS system is intended to provide backup lighting or primary lighting for a study room.
 It can be used as backup for existing AC-powered lighting to provide lighting when the AC power goes down.
