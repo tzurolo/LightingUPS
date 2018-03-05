@@ -6,4 +6,4 @@ It can also be used as the primary lighting source for a room that has no existi
 Being a UPS, it auto-switches to its internal battery when the AC power goes down, and back to AC when
 it comes back up.
 </p>
-![GitHub Logo](https://github.com/tzurolo/LightingUPS/blob/master/doc/LED_Lighting_UPS.jpg)
+![GitHub Logo](/doc/LED_Lighting_UPS.jpg)
