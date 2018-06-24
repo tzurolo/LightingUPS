@@ -28,6 +28,8 @@
 #define LENGTH_AUTO_TIME_ON 2
 #define ADDR_MANUAL_TIME_ON 7
 #define LENGTH_MANUAL_TIME_ON 2
+#define ADDR_TEMP_CAL_OFFSET 9
+#define LENGTH_TEMP_CAL_OFFSET 2
 
 extern void EEPROMStorage_Initialize (void);
 
@@ -54,5 +56,9 @@ extern void EEPROMStorage_Initialize (void);
 // max length of time to for LED lights to stay on when turned on manually
 #define EEPROMStorage_setManualTime(manualTimeOn) EEPROM_writeWord(ADDR_MANUAL_TIME_ON, manualTimeOn)
 #define EEPROMStorage_manualTime EEPROM_readWord(ADDR_MANUAL_TIME_ON)
+
+// Calibration offset 
+#define EEPROMStorage_setTempCalOffset(tempCalOffset) EEPROM_writeWord(ADDR_TEMP_CAL_OFFSET, tempCalOffset)
+#define EEPROMStorage_tempCalOffset EEPROM_readWord(ADDR_TEMP_CAL_OFFSET)
 
 #endif		// EEPROMSTORAGE
