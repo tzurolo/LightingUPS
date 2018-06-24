@@ -11,8 +11,11 @@ var socketIo = require('socket.io');
 var httpServer = http.createServer(app);
 var io = socketIo(httpServer);
 
+var programmerPortName = 'COM7';
+var serialPortName = 'COM8';
+
 var SerialPort = require("serialport");
-var serialPort = new SerialPort("COM5", {
+var serialPort = new SerialPort(serialPortName, {
   baudRate: 300
 });
 
@@ -171,7 +174,7 @@ function commenceReprogramming ()
     //  child process for re-flashing firmware with avrdude
     var child = execFile('avrdude', [
         '-p', 'attiny84',
-        '-P', 'COM4',
+        '-P', programmerPortName,
         '-c', 'avrispv2',
         '-e',
         '-U', 'flash:w:C:\\files\\LightingUPS\\firmware\\default\\LightingUPS.hex:i'
