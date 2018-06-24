@@ -23,6 +23,8 @@ void EEPROMStorage_Initialize (void)
         EEPROMStorage_setManualTime(360);   // stay on no more than 6 hours
                                             // when turned on manually
 
+        EEPROMStorage_setTempCalOffset(-266);
+
         // register that EEPROM is initialized
         EEPROM_write(0, 1);
     }
